@@ -4,6 +4,11 @@
 require 'logue/loggable'
 require 'open3'
 
+module Command
+  module Cachable
+  end
+end
+
 module Command::Cachable
   class CommandLine
     include Logue::Loggable
