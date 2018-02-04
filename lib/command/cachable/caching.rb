@@ -1,20 +1,19 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'command/cachable/line'
+require 'command/cachable/command'
 require 'command/cachable/cachefile'
 
 module Command::Cachable
-  class CachingCommandLine < CommandLine
+  class CachingCommand < Command
     # caches its input and values.
 
     def initialize *args, debug: false, dir: nil
       @args = args.dup
-      @dir = dir
+      @dir = dir || '/tmp' + Pathname.new($0).expand_path.to_s
     end
 
     def cache_dir
-      # @cache_dir ||= '/tmp' + Pathname.new($0).expand_path.to_s
       @dir
     end
 
@@ -24,7 +23,7 @@ module Command::Cachable
 
     def execute
       cachefile = cache_file
-      @output = cachefile.readlines
+      @output = cachefile.read
     end
   end
 end

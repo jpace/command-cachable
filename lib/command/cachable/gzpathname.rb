@@ -4,8 +4,11 @@
 require 'zlib'
 require 'pathname'
 
+module Command
+end
+
 module Command::Cachable
-  # A pathname (file) that reads and writes itself as gzipped
+  # A pathname (file) that reads and writes a list of lines, as gzipped
   class GzipPathname < Pathname
     def save_file content
       parent.mkpath unless parent.exist?

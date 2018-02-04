@@ -11,7 +11,7 @@ end
 
 module Command::Cachable
   # A command line executable, by default not caching.
-  class CommandLine
+  class Command
     include Logue::Loggable
 
     attr_reader :args

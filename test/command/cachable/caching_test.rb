@@ -5,17 +5,18 @@ require 'command/cachable/caching'
 require 'command/cachable/tc'
 require 'paramesan'
 require 'pathname_assertions'
+require 'pathname'
 
 module Command::Cachable
-  class CachingCommandLineTestCase < CommandTestCase
+  class CachingCommandTestCase < CommandTestCase
     include Paramesan, PathnameAssertions
 
     def setup
-      @cmdline = CachingCommandLine.new %w{ ls /bin }, dir: "/tmp/testcmdline"
+      @cmdline = CachingCommand.new %w{ ls /bin }, dir: "/tmp/testcmdline"
     end
     
     def create_testing_command_line args
-      CachingCommandLine.new(*args)
+      CachingCommand.new(*args)
     end
 
     def test_cache_dir_defaults_to_executable
@@ -24,6 +25,12 @@ module Command::Cachable
 
     def test_cache_file_defaults_to_executable
       assert_equal '/tmp/testcmdline/ls-_slash_bin.gz', @cmdline.cache_file.to_s
+    end
+
+    def test_cache_file_defaults_to_current_file
+      cmd = CachingCommand.new %w{ ls /bin }
+      dir = Pathname.new($0).expand_path
+      assert_equal "/tmp#{dir}/ls-_slash_bin.gz", cmd.cache_file.to_s
     end
 
     def test_cache_dir_set_cachefile

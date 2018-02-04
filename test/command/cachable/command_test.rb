@@ -1,21 +1,21 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'command/cachable/line'
+require 'command/cachable/command'
 require 'test_helper'
 require 'paramesan'
 require 'tempfile'
 
 module Command::Cachable
-  class CommandLineTestCase < Test::Unit::TestCase
+  class CommandTestCase < Test::Unit::TestCase
     include Paramesan, Logue::Loggable
 
     def create args
-      CommandLine.new(*args)
+      Command.new(*args)
     end
 
     def execute args
-      CommandLine.new(args).tap do |cl|
+      Command.new(args).tap do |cl|
         cl.execute
       end
     end

@@ -2,6 +2,7 @@
 # -*- ruby -*-
 
 require 'test_helper'
+require 'command/cachable/filename'
 require 'paramesan'
 
 module Command::Cachable

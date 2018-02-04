@@ -19,12 +19,12 @@ module Command::Cachable
     end
     
     def test_creates_gzfile
-      cf = create_cache_file "ls", "/var/tmp"
+      cf = create_cache_file "ls", "/var/spool"
       
       rm_cached_file cf
       refute_exists cf.pathname
       
-      output = cf.readlines
+      output = cf.read
       assert_exists cf.pathname
 
       fromgz = read_gzfile cf.pathname
@@ -32,22 +32,22 @@ module Command::Cachable
     end
 
     def test_reads_gzfile
-      cf = create_cache_file "ls", "-l", "/var/tmp"
+      cf = create_cache_file "ls", "-l", "/var/spool"
       
       rm_cached_file cf
       refute_exists cf.pathname
 
-      execlines = cf.readlines
+      execlines = cf.read
       assert_exists cf.pathname
 
       # same as above
-      cf2 = create_cache_file "ls", "-l", "/var/tmp"
+      cf2 = create_cache_file "ls", "-l", "/var/spool"
       
       def cf2.save_file
         fail "should not have called save file for read"
       end
 
-      cachedlines = cf2.readlines
+      cachedlines = cf2.read
       fromgz = read_gzfile cf.pathname
       assert_equal execlines, fromgz
       assert_equal execlines, cachedlines

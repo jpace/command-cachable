@@ -27,7 +27,7 @@ module Command::Cachable
     end
 
     def write_gzfile fname, content
-      run_command "echo #{content} > #{fname}; gzip #{fname}"
+      run_command "echo -n #{content} > #{fname}; gzip #{fname}"
     end
 
     def run_command cmd

@@ -5,8 +5,6 @@ require 'command/cachable/gzpathname'
 require 'command/cachable/tc'
 require 'tempfile'
 
-Logue::Log.level = Logue::Log::WARN
-
 module Command::Cachable
   class GzipPathnameTestCase < CommandTestCase
 
@@ -18,7 +16,7 @@ module Command::Cachable
       end
       assert_equal false, pn.exist?
       
-      pn.save_file %w{ abc }
+      pn.save_file [ "abc" ]
       assert_equal true, pn.exist?
       content = read_gzfile pn.to_s
       assert_equal [ "abc\n" ], content
@@ -30,9 +28,9 @@ module Command::Cachable
 
       write_gzfile temppath, "def"
       
-      pn = GzipPathname.new temppath + ".gz"
-      content = pn.read_file
-      assert_equal [ "def\n" ], content
+      gzpn = GzipPathname.new temppath + ".gz"
+      content = gzpn.read_file
+      assert_equal [ "def" ], content
     end
 
     def test_read_file_does_not_exist
