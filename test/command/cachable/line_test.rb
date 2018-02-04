@@ -8,10 +8,16 @@ require 'tempfile'
 
 module Command::Cachable
   class CommandLineTestCase < Test::Unit::TestCase
-    include Paramesan
+    include Paramesan, Logue::Loggable
 
     def create args
       CommandLine.new(*args)
+    end
+
+    def execute args
+      CommandLine.new(args).tap do |cl|
+        cl.execute
+      end
     end
                 
     param_test [
@@ -41,15 +47,6 @@ module Command::Cachable
       assert_equal exp, cl.to_command
     end
     
-    param_test [
-      [ true,  "ls", "/tmp" ],
-      [ false, "ls", "/doesntexist" ]
-    ] do |exp, *args|
-      cl = create args
-      cl.execute
-      assert_equal exp, cl.status.success?, "args: #{args}"
-    end
-    
     def self.build_execute_params
       @tf = Tempfile.new
       @tf.close
@@ -61,70 +58,15 @@ module Command::Cachable
     end
     
     param_test build_execute_params do |exp_output, exp_error, exp_status, cmd|
-      cl = CommandLine.new cmd
-      cl.execute
-      assert_equal exp_output, cl.output
+      assert_equal exp_output, execute(cmd).output
     end
     
     param_test build_execute_params do |exp_output, exp_error, exp_status, cmd|
-      cl = CommandLine.new cmd
-      cl.execute
-      assert_equal exp_error, cl.error
+      assert_equal exp_error, execute(cmd).error
     end
     
     param_test build_execute_params do |exp_output, exp_error, exp_status, cmd|
-      cl = CommandLine.new cmd
-      cl.execute
-      assert_equal exp_status, cl.status.exitstatus
+      assert_equal exp_status, execute(cmd).status.exitstatus
     end
-
-    # def test_output_valid
-    #   tf = Tempfile.new
-    #   cl = CommandLine.new %w{ ls /tmp }
-    #   cl.execute
-    #   refute_nil cl.output.detect { |x| tf.path.index x.chomp }
-    # end
-
-    # def test_output_invalid
-    #   tf = Tempfile.new
-    #   cmd = %w{ ls /tmp }
-    #   cmd << tf.path
-    #   cl = CommandLine.new cmd
-    #   cl.execute
-    #   refute_nil cl.output.detect { |x| tf.path.index x.chomp }
-    # end
-
-    # def test_error_existing
-    #   tf = Tempfile.new
-    #   cmd = %w{ ls /tmp/doesnotexist }
-    #   puts "cmd: #{cmd}"
-    #   cl = CommandLine.new cmd
-    #   cl.execute
-
-    #   puts "output"
-    #   puts cl.output
-    #   puts "error"
-    #   puts cl.error
-      
-    #   assert_empty cl.output
-    #   # assert_empty cl.error
-    # end
-
-    # def test_error_and_output
-    #   tf = Tempfile.new
-    #   cmd = %w{ ls /tmp/doesnotexist }
-    #   cmd << tf.path
-
-    #   cl = CommandLine.new cmd
-    #   cl.execute
-
-    #   puts "output"
-    #   puts cl.output
-    #   puts "error"
-    #   puts cl.error
-      
-    #   refute_empty cl.output
-    #   refute_empty cl.error
-    # end
   end
 end

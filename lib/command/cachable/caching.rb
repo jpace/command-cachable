@@ -8,9 +8,14 @@ module Command::Cachable
   class CachingCommandLine < CommandLine
     # caches its input and values.
 
+    def initialize *args, debug: false, dir: nil
+      @args = args.dup
+      @dir = dir
+    end
+
     def cache_dir
-      @cache_dir ||= '/tmp' + Pathname.new($0).expand_path.to_s
-      @cache_dir
+      # @cache_dir ||= '/tmp' + Pathname.new($0).expand_path.to_s
+      @dir
     end
 
     def cache_file

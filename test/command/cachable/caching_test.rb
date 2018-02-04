@@ -3,79 +3,49 @@
 
 require 'command/cachable/caching'
 require 'command/cachable/tc'
-
-# Ruby 2 changes this to "file: Class#method", so we've got to cache it (ironic, no?)
-$curfile = $0
+require 'paramesan'
+require 'pathname_assertions'
 
 module Command::Cachable
-  class TestingCachingCommandLine < CachingCommandLine
-    def cache_dir
-      CommandTestCase::CACHE_DIR.to_s
-    end
-  end
-  
   class CachingCommandLineTestCase < CommandTestCase
-    def create_command_line args = %w{ ls /bin }
+    include Paramesan, PathnameAssertions
+
+    def setup
+      @cmdline = CachingCommandLine.new %w{ ls /bin }, dir: "/tmp/testcmdline"
+    end
+    
+    def create_testing_command_line args
       CachingCommandLine.new(*args)
     end
 
-    def create_testing_command_line args = %w{ ls /bin }
-      TestingCachingCommandLine.new(*args)
-    end
-
     def test_cache_dir_defaults_to_executable
-      cl = create_command_line
-      exp = '/tmp' + (Pathname.new($curfile).expand_path).to_s
-      assert_equal exp, cl.cache_dir
+      assert_equal CACHE_DIR, Pathname.new(@cmdline.cache_dir)
     end
 
     def test_cache_file_defaults_to_executable
-      cl = create_command_line
-      exp = '/tmp' + (Pathname.new($curfile).expand_path).to_s + '/ls-_slash_bin.gz'
-      assert_equal exp, cl.cache_file.to_s
+      assert_equal '/tmp/testcmdline/ls-_slash_bin.gz', @cmdline.cache_file.to_s
     end
 
     def test_cache_dir_set_cachefile
-      cl = create_testing_command_line
-      
-      assert_not_nil cl.cache_dir
-      assert_false CACHE_DIR.exist?
-
-      cachefile = cl.cache_file
-      assert_equal CACHE_DIR.to_s + '/ls-_slash_bin.gz', cachefile.to_s
+      assert_not_nil @cmdline.cache_dir
+      refute_exists '/tmp/testcmdline'
+      assert_equal '/tmp/testcmdline/ls-_slash_bin.gz', @cmdline.cache_file.to_s
     end
 
     def test_cache_dir_created_on_execute
-      cl = create_testing_command_line
-
-      cachefile = cl.cache_file
-
-      cl.execute
-      assert CACHE_DIR.exist?
-      cachelines = read_gzfile cachefile
-
-      # we can't use /tmp, since this test will add to it:
-      syslines = IO.popen("ls /bin") do |io|
-        io.readlines
-      end
-      
-      assert_equal syslines, cachelines
+      refute_exists '/tmp/testcmdline'
+      @cmdline.execute
+      assert_exists '/tmp/testcmdline'
     end
 
     def test_cache_file_matches_results
-      dir = "/usr/local/bin"
-      cl = create_testing_command_line [ "ls", dir ]
-      
-      cachefile = cl.cache_file
+      cachefile = @cmdline.cache_file
 
-      cl.execute
-      assert CACHE_DIR.exist?, "CACHE_DIR: #{CACHE_DIR}"
+      @cmdline.execute
+      assert_exists '/tmp/testcmdline'
 
       cachelines = read_gzfile cachefile
-
-      syslines = IO.popen("ls #{dir}") do |io|
-        io.readlines
-      end
+      syslines = IO.popen("ls /bin").readlines
 
       assert_equal syslines, cachelines
     end

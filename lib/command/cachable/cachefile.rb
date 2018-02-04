@@ -5,8 +5,9 @@ require 'command/cachable/line'
 require 'command/cachable/filename'
 require 'command/cachable/gzpathname'
 
-# A file that has a pathname and output
 module Command::Cachable
+  # A file that has a pathname and output
+  #$$$ todo: cache error
   class CacheFile
     attr_reader :output
     attr_reader :pathname

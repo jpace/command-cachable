@@ -4,11 +4,13 @@
 require 'pathname'
 
 module PathnameAssertions
-  def refute_exists pathname
-    assert_false pathname.exist?, "pathname: #{pathname}"
+  def refute_exists pn
+    pn = pn.kind_of?(Pathname) ? pn : Pathname.new(pn)
+    assert_false pn.exist?, "pn: #{pn}"
   end
  
-  def assert_exists pathname
-    assert_true pathname.exist?, "pathname: #{pathname}"
+  def assert_exists pn
+    pn = pn.kind_of?(Pathname) ? pn : Pathname.new(pn)
+    assert_true pn.exist?, "pn: #{pn}"
   end
 end

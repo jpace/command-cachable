@@ -9,17 +9,18 @@ module Command::Cachable
   class CacheFileTestCase < CommandTestCase
     include PathnameAssertions
 
-    def get_cache_file *command
+    def create_cache_file *command
       CacheFile.new CACHE_DIR, command
     end
 
     def rm_cached_file cachefile
       pn = cachefile.pathname
-      pn.exist? && pn.unlink
+      pn.unlink if pn.exist?
     end
     
     def test_creates_gzfile
-      cf = get_cache_file "ls", "/var/tmp"
+      cf = create_cache_file "ls", "/var/tmp"
+      
       rm_cached_file cf
       refute_exists cf.pathname
       
@@ -31,7 +32,8 @@ module Command::Cachable
     end
 
     def test_reads_gzfile
-      cf = get_cache_file "ls", "-l", "/var/tmp"
+      cf = create_cache_file "ls", "-l", "/var/tmp"
+      
       rm_cached_file cf
       refute_exists cf.pathname
 
@@ -39,7 +41,7 @@ module Command::Cachable
       assert_exists cf.pathname
 
       # same as above
-      cf2 = get_cache_file "ls", "-l", "/var/tmp"
+      cf2 = create_cache_file "ls", "-l", "/var/tmp"
       
       def cf2.save_file
         fail "should not have called save file for read"

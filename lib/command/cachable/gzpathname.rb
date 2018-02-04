@@ -5,7 +5,7 @@ require 'zlib'
 require 'pathname'
 
 module Command::Cachable
-  # A pathname that reads and writes itself as gzipped
+  # A pathname (file) that reads and writes itself as gzipped
   class GzipPathname < Pathname
     def save_file content
       parent.mkpath unless parent.exist?
@@ -16,10 +16,9 @@ module Command::Cachable
     end
 
     def read_file
-      Array.new.tap do |content|
-        Zlib::GzipReader.open(to_s) do |gz|
-          content.concat gz.readlines
-        end
+      content = nil
+      Zlib::GzipReader.open(to_s) do |gz|
+        content = gz.readlines
       end
     end
   end

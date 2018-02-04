@@ -10,6 +10,7 @@ module Command
 end
 
 module Command::Cachable
+  # A command line executable, by default not caching.
   class CommandLine
     include Logue::Loggable
 
@@ -30,25 +31,15 @@ module Command::Cachable
       cmd = to_command
       debug "cmd: #{cmd}"
       
-      Open3.popen3(cmd) do |stdin, stdout, stderr, wthr|
+      Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thread|
         @output = stdout.readlines
         @error  = stderr.readlines
-        @status = wthr.value
+        @status = wait_thread.value
       end
 
-      if false && @output
-        puts "output"
-        @output.each_with_index do |line, idx|
-          debug "output[#{idx}]: #{line}"
-        end
-      end
-      
-      if false && @error
-        puts "error"
-        @error.each_with_index do |line, idx|
-          debug "error[#{idx}]: #{line}"
-        end
-      end
+      #$$$ this functionality isn't in Logue yet (dump of one element per line):
+      # debug "output", @output
+      # debug "error", @error
 
       debug "@status: #{@status}"
       

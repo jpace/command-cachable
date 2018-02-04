@@ -6,7 +6,7 @@ require 'pathname'
 
 module Command::Cachable
   class CommandTestCase < Test::Unit::TestCase
-    CACHE_DIR = Pathname.new '/tmp/svnx/testing'
+    CACHE_DIR = Pathname.new '/tmp/testcmdline'
 
     def rm_cache_dir
       CACHE_DIR.rmtree if CACHE_DIR.exist?
