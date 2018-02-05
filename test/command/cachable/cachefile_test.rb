@@ -18,39 +18,26 @@ module Command::Cachable
       pn.unlink if pn.exist?
     end
     
-    def test_creates_gzfile
+    def test_read_file_missing
       cf = create_cache_file "ls", "/var/spool"
       
       rm_cached_file cf
       refute_exists cf.pathname
       
       output = cf.read
-      assert_exists cf.pathname
-
-      fromgz = read_gzfile cf.pathname
-      assert_equal output, fromgz
+      assert_false output
     end
-
-    def test_reads_gzfile
-      cf = create_cache_file "ls", "-l", "/var/spool"
+    
+    def test_read_file_exists
+      cf = create_cache_file "ls", "/var/spool"
       
       rm_cached_file cf
       refute_exists cf.pathname
 
-      execlines = cf.read
-      assert_exists cf.pathname
-
-      # same as above
-      cf2 = create_cache_file "ls", "-l", "/var/spool"
+      write_gzfile cf.pathname, %w{ abc }
+      cf.save %w{ abc }
       
-      def cf2.save_file
-        fail "should not have called save file for read"
-      end
-
-      cachedlines = cf2.read
-      fromgz = read_gzfile cf.pathname
-      assert_equal execlines, fromgz
-      assert_equal execlines, cachedlines
+      assert_equal [ "abc\n" ], cf.read
     end
   end
 end

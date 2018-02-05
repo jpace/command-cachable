@@ -3,6 +3,7 @@
 
 require 'logue/loggable'
 require 'open3'
+require 'command/cachable/cachefile'
 
 module Command
   module Cachable
@@ -19,8 +20,9 @@ module Command::Cachable
     attr_reader :error
     attr_reader :status
 
-    def initialize *args, debug: false
+    def initialize *args, debug: false, caching: false
       @args = args.dup
+      @caching = caching
     end
 
     def << arg
@@ -28,9 +30,15 @@ module Command::Cachable
     end
 
     def execute
+      if @caching
+        read_cache_file
+      else
+        exec
+      end
+    end
+
+    def exec
       cmd = to_command
-      debug "cmd: #{cmd}"
-      
       Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thread|
         @output = stdout.readlines
         @error  = stderr.readlines
@@ -41,9 +49,22 @@ module Command::Cachable
       # debug "output", @output
       # debug "error", @error
 
-      debug "@status: #{@status}"
+      debug "@status: #{@status}"      
       
       @output
+    end
+
+    def read_cache_file
+      cachedir = @dir || "/tmp/cachetest"
+      cachefile = CacheFile.new cachedir, @args
+      if cachefile.pathname.exist?
+        @output = cachefile.pathname.read_file
+      else
+        exec
+        puts "@output: #{@output}"
+        cachefile.pathname.save_file @output
+        @output
+      end
     end
 
     def to_command

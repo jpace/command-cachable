@@ -1,6 +1,11 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
+module Command
+  module Cachable
+  end
+end
+
 module Command::Cachable
   class FileName
     attr_reader :name

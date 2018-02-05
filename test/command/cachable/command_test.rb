@@ -50,7 +50,6 @@ module Command::Cachable
     def self.build_execute_params
       @tf = Tempfile.new
       @tf.close
-      pn = Pathname.new @tf.path
       Array.new.tap do |a|
         a << [ [ @tf.path + "\n" ], Array.new, 0, [ "ls", @tf.path ] ]
         a << [ Array.new, [ "ls: cannot access '/tmp/doesnotexist': No such file or directory\n" ], 2, %w{ ls /tmp/doesnotexist } ]
@@ -67,6 +66,25 @@ module Command::Cachable
     
     param_test build_execute_params do |exp_output, exp_error, exp_status, cmd|
       assert_equal exp_status, execute(cmd).status.exitstatus
+    end
+    
+    def self.build_caching_params
+      @tf = Tempfile.new
+      @tf.close
+      Array.new.tap do |a|
+        a << [ [ @tf.path + "\n" ], Array.new, 0, [ "ls", @tf.path ] ]
+        # a << [ Array.new, [ "ls: cannot access '/tmp/doesnotexist': No such file or directory\n" ], 2, %w{ ls /tmp/doesnotexist } ]
+      end
+    end
+    
+    param_test build_caching_params do |exp_output, exp_error, exp_status, args|
+      cl = Command.new args, caching: true
+      cl.execute
+      assert_equal exp_output, cl.output
+
+      cachedir = "/tmp/cachetest"
+      cachefile = CacheFile.new cachedir, args
+      assert_true cachefile.pathname.exist?
     end
   end
 end

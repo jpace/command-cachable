@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'command/cachable/command'
+# require 'command/cachable/command'
 require 'command/cachable/filename'
 require 'command/cachable/gzpathname'
 
@@ -21,14 +21,11 @@ module Command::Cachable
     end
     
     def read
-      if @pathname.exist?
-        @output = @pathname.read_file
-      else
-        cl = Command.new @args
-        @output = cl.execute
-        @pathname.save_file @output
-        @output
-      end
+      @output = @pathname.exist? && @pathname.read_file
+    end
+
+    def save output
+      @pathname.save_file output
     end
 
     def to_s
