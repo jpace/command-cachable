@@ -1,11 +1,11 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'command/cachable/gzpathname'
-require 'command/cachable/tc'
+require 'command/cacheable/gzpathname'
+require 'command/cacheable/tc'
 require 'tempfile'
 
-module Command::Cachable
+module Command::Cacheable
   class GzipPathnameTestCase < CommandTestCase
 
     def test_save_file

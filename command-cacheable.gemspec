@@ -1,11 +1,11 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "command/cachable/version"
+require "command/cacheable/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "command-cachable"
-  spec.version       = Command::Cachable::VERSION
+  spec.name          = "command-cacheable"
+  spec.version       = Command::Cacheable::VERSION
   spec.authors       = ["Jeff Pace"]
   spec.email         = ["jeugenepace@gmail.com"]
 

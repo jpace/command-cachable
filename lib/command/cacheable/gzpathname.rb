@@ -7,7 +7,7 @@ require 'pathname'
 module Command
 end
 
-module Command::Cachable
+module Command::Cacheable
   # A pathname (file) that reads and writes a list of lines, as gzipped
   class GzipPathname < Pathname
     def save_file content

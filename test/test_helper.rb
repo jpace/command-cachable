@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require 'command/cachable';
+require 'command/cacheable';
 require 'test/unit'
 require 'logue/log'
 require 'rainbow'

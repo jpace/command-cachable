@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    command-cachable (0.1.0)
+    command-cacheable (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -21,7 +21,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.16)
-  command-cachable!
+  command-cacheable!
   logue (~> 1.0)
   paramesan (~> 0.1.1)
   rake (~> 10.0)

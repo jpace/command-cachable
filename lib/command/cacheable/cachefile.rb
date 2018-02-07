@@ -1,11 +1,11 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-# require 'command/cachable/command'
-require 'command/cachable/filename'
-require 'command/cachable/gzpathname'
+# require 'command/cacheable/command'
+require 'command/cacheable/filename'
+require 'command/cacheable/gzpathname'
 
-module Command::Cachable
+module Command::Cacheable
   # A file that has a pathname and output
   #$$$ todo: cache error
   class CacheFile

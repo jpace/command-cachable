@@ -4,7 +4,7 @@
 require 'test_helper'
 require 'pathname'
 
-module Command::Cachable
+module Command::Cacheable
   class CommandTestCase < Test::Unit::TestCase
     CACHE_DIR = Pathname.new '/tmp/testcmdline'
 

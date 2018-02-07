@@ -1,11 +1,11 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'command/cachable/cachefile'
-require 'command/cachable/tc'
+require 'command/cacheable/cachefile'
+require 'command/cacheable/tc'
 require 'pathname_assertions'
 
-module Command::Cachable
+module Command::Cacheable
   class CacheFileTestCase < CommandTestCase
     include PathnameAssertions
 

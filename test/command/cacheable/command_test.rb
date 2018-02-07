@@ -1,12 +1,12 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'command/cachable/command'
+require 'command/cacheable/command'
 require 'test_helper'
 require 'paramesan'
 require 'tempfile'
 
-module Command::Cachable
+module Command::Cacheable
   class CommandTestCase < Test::Unit::TestCase
     include Paramesan, Logue::Loggable
 

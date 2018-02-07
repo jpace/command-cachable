@@ -2,11 +2,11 @@
 # -*- ruby -*-
 
 module Command
-  module Cachable
+  module Cacheable
   end
 end
 
-module Command::Cachable
+module Command::Cacheable
   class FileName
     attr_reader :name
 

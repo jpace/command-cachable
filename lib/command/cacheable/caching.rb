@@ -1,10 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'command/cachable/command'
-require 'command/cachable/cachefile'
+require 'command/cacheable/command'
+require 'command/cacheable/cachefile'
 
-module Command::Cachable
+module Command::Cacheable
   class CachingCommand < Command
     # caches its input and values.
 

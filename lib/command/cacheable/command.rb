@@ -3,14 +3,14 @@
 
 require 'logue/loggable'
 require 'open3'
-require 'command/cachable/cachefile'
+require 'command/cacheable/cachefile'
 
 module Command
-  module Cachable
+  module Cacheable
   end
 end
 
-module Command::Cachable
+module Command::Cacheable
   # A command line executable, by default not caching.
   class Command
     include Logue::Loggable

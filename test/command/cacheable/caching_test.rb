@@ -1,13 +1,13 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'command/cachable/caching'
-require 'command/cachable/tc'
+require 'command/cacheable/caching'
+require 'command/cacheable/tc'
 require 'paramesan'
 require 'pathname_assertions'
 require 'pathname'
 
-module Command::Cachable
+module Command::Cacheable
   class CachingCommandTestCase < CommandTestCase
     include Paramesan, PathnameAssertions
 

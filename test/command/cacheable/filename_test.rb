@@ -2,10 +2,10 @@
 # -*- ruby -*-
 
 require 'test_helper'
-require 'command/cachable/filename'
+require 'command/cacheable/filename'
 require 'paramesan'
 
-module Command::Cachable
+module Command::Cacheable
   class FileNameTest < Test::Unit::TestCase
     include Paramesan
 
