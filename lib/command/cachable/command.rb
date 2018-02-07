@@ -61,7 +61,6 @@ module Command::Cachable
         @output = cachefile.pathname.read_file
       else
         exec
-        puts "@output: #{@output}"
         cachefile.pathname.save_file @output
         @output
       end

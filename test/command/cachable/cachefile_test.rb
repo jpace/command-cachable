@@ -34,7 +34,12 @@ module Command::Cachable
       rm_cached_file cf
       refute_exists cf.pathname
 
-      write_gzfile cf.pathname, %w{ abc }
+      dir = cf.pathname.parent
+      dir.mkpath unless dir.exist?
+
+      rootname = dir + cf.pathname.basename(".gz")
+
+      write_gzfile rootname, %w{ abc }
       cf.save %w{ abc }
       
       assert_equal [ "abc\n" ], cf.read
