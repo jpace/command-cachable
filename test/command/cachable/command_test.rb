@@ -82,9 +82,23 @@ module Command::Cachable
       cl.execute
       assert_equal exp_output, cl.output
 
-      cachedir = "/tmp/cachetest"
+      # the default directory:
+      cachefile = CacheFile.new Command::CACHEDIR, args
+      assert_true cachefile.pathname.exist?
+    end
+    
+    param_test build_caching_params do |exp_output, exp_error, exp_status, args|
+      cachedir = "/tmp/anotherdir"
+      cl = Command.new args, caching: true, cachedir: cachedir
+      cl.execute
+      assert_equal exp_output, cl.output
+
       cachefile = CacheFile.new cachedir, args
       assert_true cachefile.pathname.exist?
+    end
+
+    def test_default_directory
+      assert_equal "/tmp/cmdcache", Command::CACHEDIR
     end
   end
 end

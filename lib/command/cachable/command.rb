@@ -15,14 +15,17 @@ module Command::Cachable
   class Command
     include Logue::Loggable
 
+    CACHEDIR = "/tmp/cmdcache"
+
     attr_reader :args
     attr_reader :output
     attr_reader :error
     attr_reader :status
 
-    def initialize *args, debug: false, caching: false
-      @args = args.dup
-      @caching = caching
+    def initialize *args, debug: false, caching: false, cachedir: nil
+      @args     = args.dup
+      @caching  = caching
+      @cachedir = cachedir || CACHEDIR
     end
 
     def << arg
@@ -55,8 +58,7 @@ module Command::Cachable
     end
 
     def read_cache_file
-      cachedir = @dir || "/tmp/cachetest"
-      cachefile = CacheFile.new cachedir, @args
+      cachefile = CacheFile.new @cachedir, @args
       if cachefile.pathname.exist?
         @output = cachefile.pathname.read_file
       else
