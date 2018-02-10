@@ -19,7 +19,11 @@ module Command::Cacheable
       pn.save_file [ "abc" ]
       assert_equal true, pn.exist?
       content = read_gzfile pn.to_s
-      assert_equal [ "abc\n" ], content
+      begin
+        assert_equal [ "abc\n" ], content
+      ensure
+        pn.unlink if pn.exist?
+      end
     end
 
     def test_read_file
@@ -30,7 +34,11 @@ module Command::Cacheable
       
       gzpn = GzipPathname.new temppath + ".gz"
       content = gzpn.read_file
-      assert_equal [ "def" ], content
+      begin
+        assert_equal [ "def" ], content
+      ensure
+        gzpn.unlink if gzpn.exist?
+      end
     end
 
     def test_read_file_does_not_exist
