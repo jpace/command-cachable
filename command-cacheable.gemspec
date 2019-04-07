@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Command-line execution, caching results.}
   spec.description   = %q{Executes on the command line, caching results for performance of repeated invocations.}
-  spec.homepage      = "http://www.github.com/jpace/arbolobra"
+  spec.homepage      = "http://www.github.com/jpace/command-cacheable"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
